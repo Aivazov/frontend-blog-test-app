@@ -7,17 +7,21 @@ import Grid from '@mui/material/Grid';
 import { Post } from '../components/Post';
 import { TagsBlock } from '../components/TagsBlock';
 import { CommentsBlock } from '../components/CommentsBlock';
-import { fetchPosts } from '../redux/slices/postsSlice.js';
+import { fetchPosts, fetchTags } from '../redux/slices/postsSlice.js';
 
 export const Home = () => {
   const dispatch = useDispatch();
+
   const { posts, tags } = useSelector((state) => state.posts);
-  console.log('posts', posts);
+  // console.log('posts', posts);
+  console.log('tags', tags);
 
   const isPostsLoading = posts.status === 'loading';
+  const isTagsLoading = tags.status === 'loading';
 
   useEffect(() => {
     dispatch(fetchPosts());
+    dispatch(fetchTags());
     // axios.get('/posts');
   }, [dispatch]);
 
@@ -58,10 +62,7 @@ export const Home = () => {
           )}
         </Grid>
         <Grid xs={4} item>
-          <TagsBlock
-            items={['react', 'typescript', 'заметки']}
-            isLoading={false}
-          />
+          <TagsBlock items={tags.items} isLoading={isTagsLoading} />
           <CommentsBlock
             items={[
               {
