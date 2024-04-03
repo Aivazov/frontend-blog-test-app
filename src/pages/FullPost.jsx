@@ -33,7 +33,7 @@ export const FullPost = () => {
   return (
     <>
       {data && <Post
-          id={data.id}
+          id={data._id}
           title={data.title}
           imageUrl={data.imageUrl}
           user={{
