@@ -13,8 +13,8 @@ export const Home = () => {
   const dispatch = useDispatch();
 
   const { posts, tags } = useSelector((state) => state.posts);
-  // console.log('posts', posts);
-  console.log('tags', tags);
+  // console.log('posts Home.jsx', posts);
+  // console.log('tags Home.jsx', tags);
 
   const isPostsLoading = posts.status === 'loading';
   const isTagsLoading = tags.status === 'loading';

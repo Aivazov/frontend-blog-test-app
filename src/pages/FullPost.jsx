@@ -15,13 +15,13 @@ export const FullPost = () => {
 
   useEffect(() => {
     axios
-      .get(`/posts/:${id}`)
+      .get(`/posts/${id}`)
       .then((res) => {
         setData(res.data);
-        console.log(data);
+        console.log('data Fullpost.jsx', data);
       })
       .catch((err) => {
-        console.error(err);
+        console.error('err FullPost.jsx',err);
       });
   }, [id]);
 
