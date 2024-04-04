@@ -4,10 +4,14 @@ import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 
 import styles from './Login.module.scss';
+import { fetchAuth } from '../../redux/slices/authSlice';
 
 export const Login = () => {
+  const dispatch = useDispatch();
+
   const {
     register,
     handleSubmit,
@@ -23,7 +27,10 @@ export const Login = () => {
 
   const onSubmit = (values) => {
     console.log('values Login.jsx', values);
+    dispatch(fetchAuth());
   };
+
+  console.log(errors, isValid);
 
   return (
     <Paper classes={{ root: styles.root }}>
