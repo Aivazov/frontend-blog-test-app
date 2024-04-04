@@ -1,24 +1,29 @@
-import React from "react";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import Paper from "@mui/material/Paper";
-import Button from "@mui/material/Button";
-import { useForm } from "react-hook-form";
+import React from 'react';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import { useForm } from 'react-hook-form';
 
-import styles from "./Login.module.scss";
+import styles from './Login.module.scss';
 
 export const Login = () => {
-  const {register, handleSubmit, setError, formState :{errors, isValid},} = useForm({
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isValid },
+  } = useForm({
     defaultValues: {
       email: '',
       password: '',
     },
-    mode: 'onChange'
+    mode: 'onChange',
   });
 
-  const onSubmit = (values )=> {
-    console.log('values Login.jsx',values);
-  }
+  const onSubmit = (values) => {
+    console.log('values Login.jsx', values);
+  };
 
   return (
     <Paper classes={{ root: styles.root }}>
@@ -29,16 +34,20 @@ export const Login = () => {
         <TextField
           className={styles.field}
           label="E-Mail"
-          error
-          helperText={errors}
+          error={Boolean(errors.email?.message)}
+          helperText={errors.email?.message}
           fullWidth
-          {...register('email', {required: 'Indicate email'})}
+          {...register('email', { required: 'Indicate email' })}
         />
-        <TextField className={styles.field} label="Пароль" fullWidth 
-          {...register('password', {required: 'Indicate password'})}
-
+        <TextField
+          className={styles.field}
+          label="Пароль"
+          fullWidth
+          error={Boolean(errors.email?.message)}
+          helperText={errors.password?.message}
+          {...register('password', { required: 'Indicate password' })}
         />
-        <Button size="large" variant="contained" fullWidth>
+        <Button type="submit" size="large" variant="contained" fullWidth>
           Войти
         </Button>
       </form>
