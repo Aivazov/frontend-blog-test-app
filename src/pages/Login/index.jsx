@@ -19,15 +19,15 @@ export const Login = () => {
     formState: { errors, isValid },
   } = useForm({
     defaultValues: {
-      email: '',
-      password: '',
+      email: 'aivazov3@test.com',
+      passwordHash: 'qwerty123',
     },
     mode: 'onChange',
   });
 
   const onSubmit = (values) => {
     console.log('values Login.jsx', values);
-    dispatch(fetchAuth());
+    dispatch(fetchAuth(values));
   };
 
   console.log(errors, isValid);
@@ -35,7 +35,7 @@ export const Login = () => {
   return (
     <Paper classes={{ root: styles.root }}>
       <Typography classes={{ root: styles.title }} variant="h5">
-        Вход в аккаунт
+        Account Sign In
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <TextField
@@ -44,15 +44,15 @@ export const Login = () => {
           error={Boolean(errors.email?.message)}
           helperText={errors.email?.message}
           fullWidth
-          {...register('email', { required: 'Indicate email' })}
+          {...register('email', { required: 'Enter an email' })}
         />
         <TextField
           className={styles.field}
-          label="Пароль"
+          label="Password"
           fullWidth
-          error={Boolean(errors.email?.message)}
-          helperText={errors.password?.message}
-          {...register('password', { required: 'Indicate password' })}
+          error={Boolean(errors.passwordHash?.message)}
+          helperText={errors.passwordHash?.message}
+          {...register('passwordHash', { required: 'Enter a password' })}
         />
         <Button type="submit" size="large" variant="contained" fullWidth>
           Войти
