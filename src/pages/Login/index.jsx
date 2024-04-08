@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import styles from './Login.module.scss';
 import { fetchAuth, selectIsAuth } from '../../redux/slices/authSlice';
+import { Navigate } from 'react-router-dom';
 
 export const Login = () => {
   const dispatch = useDispatch();
@@ -34,6 +35,9 @@ export const Login = () => {
   console.log(errors, isValid);
   console.log('isAuth', isAuth);
 
+  if (isAuth) {
+    return <Navigate to="/" />;
+  }
   return (
     <Paper classes={{ root: styles.root }}>
       <Typography classes={{ root: styles.title }} variant="h5">
