@@ -17,7 +17,6 @@ export const Login = () => {
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors, isValid },
   } = useForm({
     defaultValues: {
@@ -28,7 +27,7 @@ export const Login = () => {
   });
 
   const onSubmit = async (values) => {
-    console.log('values Login.jsx', values);
+    // console.log('values Login.jsx', values);
     const data = await dispatch(fetchAuth(values));
 
     if (!data.payload) {
@@ -40,8 +39,8 @@ export const Login = () => {
     }
   };
 
-  console.log(errors, isValid);
-  console.log('isAuth', isAuth);
+  // console.log(errors, isValid);
+  // console.log('isAuth', isAuth);
 
   if (isAuth) {
     return <Navigate to="/" />;
@@ -55,6 +54,7 @@ export const Login = () => {
         <TextField
           className={styles.field}
           label="E-Mail"
+          type="email"
           error={Boolean(errors.email?.message)}
           helperText={errors.email?.message}
           fullWidth
@@ -63,12 +63,19 @@ export const Login = () => {
         <TextField
           className={styles.field}
           label="Password"
+          type="password"
           fullWidth
           error={Boolean(errors.passwordHash?.message)}
           helperText={errors.passwordHash?.message}
           {...register('passwordHash', { required: 'Enter a password' })}
         />
-        <Button type="submit" size="large" variant="contained" fullWidth>
+        <Button
+          type="submit"
+          size="large"
+          variant="contained"
+          fullWidth
+          disabled={!isValid}
+        >
           Sign in
         </Button>
       </form>
