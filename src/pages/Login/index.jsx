@@ -27,9 +27,17 @@ export const Login = () => {
     mode: 'onChange',
   });
 
-  const onSubmit = (values) => {
+  const onSubmit = async (values) => {
     console.log('values Login.jsx', values);
-    dispatch(fetchAuth(values));
+    const data = await dispatch(fetchAuth(values));
+
+    if (!data.payload) {
+      alert('Failed to authorize');
+    }
+
+    if ('token' in data.payload) {
+      window.localStorage.setItem('token', data.payload.token);
+    }
   };
 
   console.log(errors, isValid);
@@ -61,7 +69,7 @@ export const Login = () => {
           {...register('passwordHash', { required: 'Enter a password' })}
         />
         <Button type="submit" size="large" variant="contained" fullWidth>
-          Войти
+          Sign in
         </Button>
       </form>
     </Paper>
