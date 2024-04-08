@@ -4,13 +4,14 @@ import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import styles from './Login.module.scss';
-import { fetchAuth } from '../../redux/slices/authSlice';
+import { fetchAuth, selectIsAuth } from '../../redux/slices/authSlice';
 
 export const Login = () => {
   const dispatch = useDispatch();
+  const isAuth = useSelector(selectIsAuth);
 
   const {
     register,
@@ -31,6 +32,7 @@ export const Login = () => {
   };
 
   console.log(errors, isValid);
+  console.log('isAuth', isAuth);
 
   return (
     <Paper classes={{ root: styles.root }}>
