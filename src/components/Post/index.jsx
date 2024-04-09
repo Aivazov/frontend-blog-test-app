@@ -11,6 +11,8 @@ import CommentIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import styles from './Post.module.scss';
 import { UserInfo } from '../UserInfo';
 import { PostSkeleton } from './Skeleton';
+import { useDispatch } from 'react-redux';
+import { fetchDeletePost } from '../../redux/slices/postsSlice';
 
 export const Post = ({
   id,
@@ -26,6 +28,8 @@ export const Post = ({
   isLoading,
   isEditable,
 }) => {
+  const dispatch = useDispatch();
+
   if (isLoading) {
     return <PostSkeleton />;
   }
@@ -41,7 +45,11 @@ export const Post = ({
     imageUrl = defaultImgUrl;
   }
 
-  const onClickRemove = () => {};
+  const onClickRemove = () => {
+    if (window.confirm('Are you sure you want to delete post?')) {
+      dispatch(fetchDeletePost(id));
+    }
+  };
 
   return (
     <div className={clsx(styles.root, { [styles.rootFull]: isFullPost })}>

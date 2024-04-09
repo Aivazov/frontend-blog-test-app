@@ -6,6 +6,13 @@ export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
   return data;
 });
 
+export const fetchDeletePost = createAsyncThunk(
+  'posts/fetchDeletePost',
+  async (id) => {
+    const { data } = await axios.delete(`/posts/${id}`);
+  }
+);
+
 export const fetchTags = createAsyncThunk('posts/fetchTags', async () => {
   const { data } = await axios.get('/tags');
   return data;
@@ -27,6 +34,7 @@ const postsSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: {
+    //get posts
     [fetchPosts.pending]: (state) => {
       state.posts.items = [];
       state.posts.status = 'loading';
@@ -39,6 +47,7 @@ const postsSlice = createSlice({
       state.posts.items = [];
       state.posts.status = 'error';
     },
+    //get tags
     [fetchTags.pending]: (state) => {
       state.tags.items = [];
       state.tags.status = 'loading';
@@ -50,6 +59,13 @@ const postsSlice = createSlice({
     [fetchTags.rejected]: (state) => {
       state.tags.items = [];
       state.tags.status = 'error';
+    },
+    //delete post
+    [fetchDeletePost.pending]: (state, action) => {
+      state.posts.items = state.posts.items.filter(
+        (obj) => obj._id !== action.meta.arg
+      );
+      // state.posts.status = 'loading';
     },
   },
 });
