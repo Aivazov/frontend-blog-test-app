@@ -30,6 +30,17 @@ export const Post = ({
     return <PostSkeleton />;
   }
 
+  const defaultImgUrl =
+    'https://res.cloudinary.com/practicaldev/image/fetch/s--UnAfrEG8--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/icohm5g0axh9wjmu4oc3.png';
+
+  console.log(imageUrl);
+
+  if (imageUrl) {
+    imageUrl = `http://localhost:2999${imageUrl}`;
+  } else {
+    imageUrl = defaultImgUrl;
+  }
+
   const onClickRemove = () => {};
 
   return (
@@ -46,13 +57,18 @@ export const Post = ({
           </IconButton>
         </div>
       )}
-      {imageUrl && (
+      {/* {imageUrl && (
         <img
           className={clsx(styles.image, { [styles.imageFull]: isFullPost })}
           src={imageUrl}
           alt={title}
         />
-      )}
+      )} */}
+      <img
+        className={clsx(styles.image, { [styles.imageFull]: isFullPost })}
+        src={imageUrl ? imageUrl : defaultImgUrl}
+        alt={title}
+      />
       <div className={styles.wrapper}>
         <UserInfo {...user} additionalText={createdAt} />
         <div className={styles.indention}>
