@@ -12,6 +12,7 @@ import { fetchPosts, fetchTags } from '../redux/slices/postsSlice.js';
 export const Home = () => {
   const dispatch = useDispatch();
 
+  const userData = useSelector((state) => state.auth.data);
   const { posts, tags } = useSelector((state) => state.posts);
   console.log('posts Home.jsx', posts);
   // console.log('tags Home.jsx', tags);
@@ -56,7 +57,7 @@ export const Home = () => {
                 isLoading={false}
                 commentsCount={3}
                 tags={object.tags}
-                isEditable
+                isEditable={userData?._id === object.author._id} //check if author Id match Id of the post creator
               />
             )
           )}

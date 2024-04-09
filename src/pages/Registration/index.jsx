@@ -76,6 +76,7 @@ export const Registration = () => {
         />
         <TextField
           className={styles.field}
+          type="password"
           label="Password"
           fullWidth
           error={Boolean(errors.passwordHash?.message)}
