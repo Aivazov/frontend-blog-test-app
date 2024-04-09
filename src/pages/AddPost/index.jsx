@@ -7,14 +7,16 @@ import SimpleMDE from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 import styles from './AddPost.module.scss';
 import axios from '../../axios';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectIsAuth } from '../../redux/slices/authSlice';
 
 export const AddPost = () => {
   const isAuth = useSelector(selectIsAuth);
+  const navigate = useNavigate();
 
-  const [value, setValue] = useState('');
+  const [text, setText] = useState('');
+  const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
   const [tags, setTags] = useState('');
 
@@ -30,16 +32,19 @@ export const AddPost = () => {
       formData.append('image', file);
       const { data } = await axios.post('/uploads', formData);
       console.log('data AddPost', data);
+      setImageUrl(data.url);
     } catch (error) {
       console.warn(error);
       alert('Failed to upload the file');
     }
   };
 
-  const onClickRemoveImage = () => {};
+  const onClickRemoveImage = () => {
+    setImageUrl(null);
+  };
 
-  const onChange = useCallback((value) => {
-    setValue(value);
+  const onChange = useCallback((text) => {
+    setText(text);
   }, []);
 
   const options = useMemo(
@@ -57,11 +62,33 @@ export const AddPost = () => {
     []
   );
 
+  const onSubmit = async () => {
+    try {
+      setLoading(true);
+
+      const fields = {
+        title,
+        imageUrl,
+        tags,
+        // tags: tags.split(','),
+        text,
+      };
+
+      const { data } = await axios.post('/posts', fields);
+
+      const postId = data._id;
+      navigate(`/posts/${postId}`);
+    } catch (error) {
+      console.warn(error);
+      alert('Failed to create post');
+    }
+  };
+
   if (!window.localStorage.getItem('token') && !isAuth) {
     return <Navigate to="/" />;
   }
 
-  console.log({ title, tags, value });
+  console.log({ title, tags, text });
   return (
     <Paper style={{ padding: 30 }}>
       <Button
@@ -113,12 +140,12 @@ export const AddPost = () => {
       />
       <SimpleMDE
         className={styles.editor}
-        value={value}
+        value={text}
         onChange={onChange}
         options={options}
       />
       <div className={styles.buttons}>
-        <Button size="large" variant="contained">
+        <Button size="large" variant="contained" onClick={onSubmit}>
           Pulicate
         </Button>
         <a href="/">
