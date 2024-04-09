@@ -6,21 +6,34 @@ import SimpleMDE from 'react-simplemde-editor';
 
 import 'easymde/dist/easymde.min.css';
 import styles from './AddPost.module.scss';
+import axios from '../../axios';
 import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectIsAuth } from '../../redux/slices/authSlice';
 
 export const AddPost = () => {
-  const imageUrl = '';
   const isAuth = useSelector(selectIsAuth);
 
   const [value, setValue] = useState('');
   const [title, setTitle] = useState('');
   const [tags, setTags] = useState('');
+
+  const [imageUrl, setImageUrl] = useState('');
   const inputFileRef = useRef(null);
 
   const handleChangeFile = async (e) => {
     console.log(e.target.files);
+
+    try {
+      const formData = new FormData();
+      const file = e.target.files[0];
+      formData.append('image', file);
+      const { data } = await axios.post('/uploads', formData);
+      console.log('data AddPost', data);
+    } catch (error) {
+      console.warn(error);
+      alert('Failed to upload the file');
+    }
   };
 
   const onClickRemoveImage = () => {};
@@ -34,7 +47,7 @@ export const AddPost = () => {
       spellChecker: false,
       maxHeight: '400px',
       autofocus: true,
-      placeholder: 'Введите текст...',
+      placeholder: 'Text here...',
       status: false,
       autosave: {
         enabled: true,
@@ -56,7 +69,7 @@ export const AddPost = () => {
         variant="outlined"
         size="large"
       >
-        Загрузить превью
+        Upload an image
       </Button>
       <input
         type="file"
@@ -65,23 +78,27 @@ export const AddPost = () => {
         hidden
       />
       {imageUrl && (
-        <Button variant="contained" color="error" onClick={onClickRemoveImage}>
-          Удалить
-        </Button>
-      )}
-      {imageUrl && (
-        <img
-          className={styles.image}
-          src={`http://localhost:4444${imageUrl}`}
-          alt="Uploaded"
-        />
+        <>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={onClickRemoveImage}
+          >
+            Remove
+          </Button>
+          <img
+            className={styles.image}
+            src={`http://localhost:2999${imageUrl}`}
+            alt="Uploaded"
+          />
+        </>
       )}
       <br />
       <br />
       <TextField
         classes={{ root: styles.title }}
         variant="standard"
-        placeholder="Заголовок статьи..."
+        placeholder="Article title..."
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         fullWidth
@@ -91,7 +108,7 @@ export const AddPost = () => {
         variant="standard"
         value={tags}
         onChange={(e) => setTags(e.target.value)}
-        placeholder="Тэги"
+        placeholder="Tags"
         fullWidth
       />
       <SimpleMDE
@@ -102,10 +119,10 @@ export const AddPost = () => {
       />
       <div className={styles.buttons}>
         <Button size="large" variant="contained">
-          Опубликовать
+          Pulicate
         </Button>
         <a href="/">
-          <Button size="large">Отмена</Button>
+          <Button size="large">Cancel</Button>
         </a>
       </div>
     </Paper>
