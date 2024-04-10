@@ -65,7 +65,7 @@ export const Home = () => {
         </Grid>
         <Grid xs={4} item>
           <TagsBlock items={tags.items} isLoading={isTagsLoading} />
-          <CommentsBlock
+          {/* <CommentsBlock
             items={[
               {
                 user: {
@@ -83,7 +83,7 @@ export const Home = () => {
               },
             ]}
             isLoading={false}
-          />
+          /> */}
         </Grid>
       </Grid>
     </>
