@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useRef, useMemo } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useMemo,
+} from 'react';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
@@ -7,20 +13,24 @@ import SimpleMDE from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 import styles from './AddPost.module.scss';
 import axios from '../../axios';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectIsAuth } from '../../redux/slices/authSlice';
 
 export const AddPost = () => {
   const isAuth = useSelector(selectIsAuth);
   const navigate = useNavigate();
+  const { id } = useParams();
 
-  const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
-  const [title, setTitle] = useState('');
-  const [tags, setTags] = useState('');
 
+  const [title, setTitle] = useState('');
+  const [text, setText] = useState('');
+  const [tags, setTags] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+
+  const isEditing = Boolean(id);
+
   const inputFileRef = useRef(null);
 
   const handleChangeFile = async (e) => {
@@ -74,15 +84,37 @@ export const AddPost = () => {
         text,
       };
 
-      const { data } = await axios.post('/posts', fields);
+      const { data } = isEditing
+        ? await axios.patch(`/posts/${id}`, fields)
+        : await axios.post('/posts', fields);
 
-      const postId = data._id;
-      navigate(`/posts/${postId}`);
+      const checkIdForUpdatePost = isEditing ? id : data._id;
+
+      // const postId = data._id;
+      navigate(`/posts/${checkIdForUpdatePost}`);
+      // navigate(`/posts/${postId}`);
     } catch (error) {
       console.warn(error);
       alert('Failed to create post');
     }
   };
+
+  useEffect(() => {
+    if (id) {
+      axios
+        .get(`/posts/${id}`)
+        .then(({ data }) => {
+          setTitle(data.title);
+          setTags(data.tags);
+          setText(data.text);
+          setImageUrl(data.imageUrl);
+        })
+        .catch((error) => {
+          console.warn(error);
+          alert('Failed to get post');
+        });
+    }
+  }, [id]);
 
   if (!window.localStorage.getItem('token') && !isAuth) {
     return <Navigate to="/" />;
@@ -146,7 +178,7 @@ export const AddPost = () => {
       />
       <div className={styles.buttons}>
         <Button size="large" variant="contained" onClick={onSubmit}>
-          Pulicate
+          {isEditing ? 'Save' : 'Pulicate'}
         </Button>
         <a href="/">
           <Button size="large">Cancel</Button>
